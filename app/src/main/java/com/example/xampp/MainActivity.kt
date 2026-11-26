@@ -7,11 +7,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.xampp.uicontroller.route.DestinasiEntry
+import com.example.xampp.uicontroller.route.DestinasiHome
 import com.example.xampp.ui.theme.XamppTheme
+import com.example.xampp.view.EntrySiswaScreen
+import com.example.xampp.view.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             XamppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    DataSiswaApp(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -31,17 +36,24 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
+fun DataSiswaApp(
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier
+) {
+    NavHost(
+        navController = navController,
+        startDestination = DestinasiHome.route,
         modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    XamppTheme {
-        Greeting("Android")
+    ) {
+        composable(route = DestinasiHome.route) {
+            HomeScreen(
+                navigateToItemEntry = { navController.navigate(DestinasiEntry.route) }
+            )
+        }
+        composable(route = DestinasiEntry.route) {
+            EntrySiswaScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
